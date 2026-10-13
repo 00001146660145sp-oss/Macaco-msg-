@@ -1,0 +1,722 @@
+
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#075e54">
+<title>Macaco msg</title>
+<style>
+:root {
+  --green: #087e70;
+  --deep: #075e54;
+  --bg: #f4f7f6;
+  --ink: #172b2a;
+  --muted: #71817f;
+  --line: #e5ecea;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+button, input { font: inherit; }
+button { cursor: pointer; border: 0; }
+.hidden { display: none !important; }
+header {
+  background: var(--deep);
+  color: white;
+  padding: 18px 24px;
+  font-size: 23px;
+  font-weight: bold;
+}
+main {
+  max-width: 1100px;
+  margin: 25px auto;
+  padding: 0 15px;
+}
+.auth {
+  max-width: 430px;
+  margin: 7vh auto;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 28px;
+}
+h1 { font-size: 27px; }
+.sub, .notice { color: var(--muted); line-height: 1.5; }
+.field { margin: 16px 0; }
+.field label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+input {
+  width: 100%;
+  padding: 13px;
+  border: 1px solid #d9e4e1;
+  border-radius: 10px;
+  outline-color: var(--green);
+}
+.btn {
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-weight: bold;
+}
+.primary { background: var(--green); color: white; }
+.wide { width: 100%; }
+.google {
+  width: 100%;
+  background: white;
+  border: 1px solid var(--line);
+  margin: 15px 0;
+}
+.notice { font-size: 12px; }
+.error { color: #b42318; font-size: 13px; }
+.app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: min(78vh, 750px);
+  min-height: 500px;
+  background: white;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--line);
+  min-width: 0;
+}
+.sidehead { padding: 17px; border-bottom: 1px solid var(--line); }
+.row { display: flex; align-items: center; gap: 10px; }
+.between { justify-content: space-between; }
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #b8eadc;
+  color: var(--deep);
+  display: grid;
+  place-items: center;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.muted { color: var(--muted); font-size: 12px; }
+.profile-name { font-weight: bold; }
+.notify-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 11px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f8fbfa;
+}
+.notify-btn { padding: 9px; font-size: 12px; }
+.searchbox { margin-top: 12px; background: #f6f9f8; }
+.section-label {
+  padding: 15px 17px 8px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+.people { overflow: auto; flex: 1; }
+.person {
+  padding: 12px 17px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  cursor: pointer;
+}
+.person:hover, .person.active { background: #eff8f5; }
+.person .info { min-width: 0; flex: 1; }
+.person .info strong { display: block; font-size: 14px; }
+.person .info span { font-size: 12px; color: var(--muted); }
+.newcontact { padding: 12px; display: flex; gap: 8px; }
+.newcontact input { min-width: 0; flex: 1; }
+.iconbtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: #e8f5f1;
+  color: var(--deep);
+  font-size: 18px;
+}
+.chat {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fbfdfc;
+}
+.chathead {
+  padding: 15px;
+  background: white;
+  border-bottom: 1px solid var(--line);
+}
+.chat-actions { display: flex; gap: 7px; margin-left: auto; }
+.chatbody {
+  flex: 1;
+  overflow: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bubble {
+  max-width: 78%;
+  padding: 11px 14px;
+  border-radius: 14px;
+  background: white;
+  border: 1px solid var(--line);
+  overflow-wrap: anywhere;
+  align-self: flex-start;
+}
+.bubble.mine {
+  align-self: flex-end;
+  background: #d9f5e9;
+}
+.time {
+  font-size: 10px;
+  color: var(--muted);
+  text-align: right;
+  margin-top: 5px;
+}
+.composer {
+  display: flex;
+  gap: 9px;
+  padding: 12px;
+  background: white;
+  border-top: 1px solid var(--line);
+}
+.composer input { flex: 1; min-width: 0; }
+.send {
+  width: 48px;
+  border-radius: 10px;
+  background: var(--green);
+  color: white;
+  font-size: 20px;
+}
+.empty {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 25px;
+  color: var(--muted);
+}
+.empty h2 { color: var(--ink); }
+.callnote {
+  padding: 10px;
+  background: #f1f8f5;
+  font-size: 12px;
+}
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #173b34;
+  color: white;
+  padding: 12px 16px;
+  border-radius: 10px;
+  z-index: 5;
+}
+.mobile-back { display: none; }
+@media(max-width:720px) {
+  main { margin: 10px auto; padding: 0 6px; }
+  header { padding: 15px; }
+  .app {
+    grid-template-columns: 1fr;
+    height: calc(100dvh - 90px);
+    min-height: 0;
+  }
+  .app.chat-open .side { display: none; }
+  .app:not(.chat-open) .chat { display: none; }
+  .auth { margin: 5vh 5px; padding: 22px; }
+  .mobile-back { display: inline-block; }
+}
+</style>
+</head>
+<body>
+
+<header>🐒 Macaco msg</header>
+
+<main>
+<section id="auth" class="auth">
+  <h1>Entre no Macaco msg</h1>
+  <p class="sub">Encontre pessoas pelo nome de usuário.</p>
+
+  <button id="googleBtn" class="btn google">
+    🌐 Continuar com Google
+  </button>
+
+  <p class="sub">Perfil de demonstração</p>
+
+  <div class="field">
+    <label for="loginUser">Nome de usuário</label>
+    <input id="loginUser" placeholder="ex.: usuario123"
+           autocomplete="username">
+  </div>
+
+  <div class="field">
+    <label for="loginPass">Senha</label>
+    <input id="loginPass" type="password"
+           placeholder="Digite sua senha"
+           autocomplete="current-password">
+  </div>
+
+  <button id="loginBtn" class="btn primary wide">
+    Entrar / Criar conta de teste
+  </button>
+
+  <p id="authError" class="error"></p>
+
+  <p class="notice">
+    Esta é uma versão de demonstração. O login Google
+    ainda precisa ser configurado. Não use senhas
+    pessoais ou reutilizadas.
+  </p>
+</section>
+
+<section id="app" class="app hidden">
+  <aside class="side">
+    <div class="sidehead">
+      <div class="row between">
+        <div class="row">
+          <div id="myAvatar" class="avatar">?</div>
+          <div>
+            <div id="myName" class="profile-name">Seu perfil</div>
+            <div id="myHandle" class="muted">@usuario</div>
+          </div>
+        </div>
+        <button id="logoutBtn" class="iconbtn" title="Sair">↪</button>
+      </div>
+
+      <div class="notify-panel">
+        <div>
+          <strong>Notificações</strong>
+          <div id="notifyStatus" class="muted">Não configuradas</div>
+        </div>
+        <button id="notifyBtn" class="btn primary notify-btn">
+          Permitir
+        </button>
+      </div>
+
+      <input id="search" class="searchbox"
+             placeholder="🔎 Buscar nas conversas">
+    </div>
+
+    <div class="section-label">Suas conversas</div>
+    <div id="people" class="people"></div>
+
+    <div class="section-label">Adicionar pessoa</div>
+    <div class="newcontact">
+      <input id="findUser" placeholder="@nome de usuário">
+      <button id="findBtn" class="btn primary">Adicionar</button>
+    </div>
+
+    <p class="notice" style="padding:0 14px">
+      Só aparecem os contatos que você adicionar.
+      Para encontrar pessoas reais, conecte um servidor.
+    </p>
+  </aside>
+
+  <section class="chat">
+    <div id="chatHead" class="chathead hidden">
+      <div class="row">
+        <button id="backBtn" class="iconbtn mobile-back">←</button>
+        <div id="chatAvatar" class="avatar">?</div>
+        <div>
+          <div id="chatName" class="profile-name">Contato</div>
+          <div id="chatHandle" class="muted">@contato</div>
+        </div>
+        <div class="chat-actions">
+          <button id="voiceBtn" class="iconbtn" title="Chamada de voz">☎</button>
+          <button id="videoBtn" class="iconbtn" title="Chamada de vídeo">▣</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="callNote" class="callnote hidden"></div>
+
+    <div id="messages" class="chatbody">
+      <div class="empty">
+        <div>
+          <div style="font-size:45px">💬</div>
+          <h2>Suas conversas</h2>
+          <p>Adicione alguém pelo nome de usuário para começar.</p>
+        </div>
+      </div>
+    </div>
+
+    <form id="composer" class="composer hidden">
+      <input id="messageInput" placeholder="Digite uma mensagem..."
+             maxlength="2000" autocomplete="off">
+      <button class="send" aria-label="Enviar">➤</button>
+    </form>
+  </section>
+</section>
+</main>
+
+<script>
+const $ = id => document.getElementById(id);
+
+let me = null;
+let active = null;
+let people = [];
+let chats = {};
+
+function read(key, fallback) {
+  try {
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function save() {
+  if (!me) return;
+  localStorage.setItem(
+    'macacomsg_people_' + me.handle,
+    JSON.stringify(people)
+  );
+  localStorage.setItem(
+    'macacomsg_chats_' + me.handle,
+    JSON.stringify(chats)
+  );
+}
+
+function initials(name) {
+  return name.trim().split(/\s+/).slice(0, 2)
+    .map(part => part[0] || '').join('').toUpperCase();
+}
+
+function toast(message) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  document.body.append(el);
+  setTimeout(() => el.remove(), 2800);
+}
+
+function start(name, handle) {
+  me = {name, handle};
+
+  // Não adiciona bots nem contatos de exemplo.
+  people = read('macacomsg_people_' + handle, []);
+  chats = read('macacomsg_chats_' + handle, {});
+
+  $('auth').classList.add('hidden');
+  $('app').classList.remove('hidden');
+
+  $('myAvatar').textContent = initials(name);
+  $('myName').textContent = name;
+  $('myHandle').textContent = '@' + handle;
+
+  renderPeople();
+  showEmpty();
+  save();
+}
+
+function renderPeople(filter = '') {
+  const list = $('people');
+  list.innerHTML = '';
+
+  const filtered = people.filter(person =>
+    (person.name + ' ' + person.handle)
+      .toLowerCase()
+      .includes(filter.toLowerCase().replace(/^@/, ''))
+  );
+
+  if (!filtered.length) {
+    const empty = document.createElement('p');
+    empty.className = 'notice';
+    empty.style.padding = '15px';
+    empty.textContent = 'Nenhuma conversa. Adicione alguém abaixo.';
+    list.append(empty);
+    return;
+  }
+
+  filtered.forEach(person => {
+    const last = (chats[person.handle] || []).slice(-1)[0];
+    const el = document.createElement('div');
+    el.className = 'person' +
+      (active === person.handle ? ' active' : '');
+
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = initials(person.name);
+
+    const info = document.createElement('div');
+    info.className = 'info';
+
+    const name = document.createElement('strong');
+    name.textContent = person.name;
+
+    const preview = document.createElement('span');
+    preview.textContent = last ? last.text : '@' + person.handle;
+
+    info.append(name, preview);
+    el.append(avatar, info);
+    el.onclick = () => openChat(person.handle);
+    list.append(el);
+  });
+}
+
+function showEmpty() {
+  active = null;
+  $('app').classList.remove('chat-open');
+  $('chatHead').classList.add('hidden');
+  $('composer').classList.add('hidden');
+  $('callNote').classList.add('hidden');
+
+  $('messages').innerHTML = `
+    <div class="empty">
+      <div>
+        <div style="font-size:45px">💬</div>
+        <h2>Suas conversas</h2>
+        <p>Adicione alguém pelo nome de usuário para começar.</p>
+      </div>
+    </div>`;
+
+  renderPeople($('search').value);
+}
+
+function openChat(handle) {
+  const person = people.find(p => p.handle === handle);
+  if (!person) return;
+
+  active = handle;
+  $('app').classList.add('chat-open');
+  $('chatHead').classList.remove('hidden');
+  $('composer').classList.remove('hidden');
+  $('callNote').classList.add('hidden');
+
+  $('chatAvatar').textContent = initials(person.name);
+  $('chatName').textContent = person.name;
+  $('chatHandle').textContent = '@' + person.handle;
+
+  renderMessages();
+  renderPeople($('search').value);
+  $('messageInput').focus();
+}
+
+function renderMessages() {
+  const box = $('messages');
+  box.innerHTML = '';
+  const arr = chats[active] || [];
+
+  if (!arr.length) {
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = 'Comece a conversa enviando uma mensagem.';
+    box.append(empty);
+    return;
+  }
+
+  arr.forEach(message => {
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble' +
+      (message.from === me.handle ? ' mine' : '');
+
+    const text = document.createElement('div');
+    text.textContent = message.text;
+
+    const time = document.createElement('div');
+    time.className = 'time';
+    time.textContent = message.time;
+
+    bubble.append(text, time);
+    box.append(bubble);
+  });
+
+  box.scrollTop = box.scrollHeight;
+}
+
+$('loginBtn').onclick = () => {
+  const user = $('loginUser').value.trim()
+    .replace(/^@/, '').toLowerCase();
+  const password = $('loginPass').value;
+
+  if (!/^[a-z0-9._]{3,24}$/.test(user)) {
+    $('authError').textContent =
+      'Use 3 a 24 caracteres: letras, números, ponto ou _.';
+    return;
+  }
+
+  if (password.length < 4) {
+    $('authError').textContent =
+      'Digite uma senha de pelo menos 4 caracteres.';
+    return;
+  }
+
+  const accounts = read('macacomsg_demo_accounts', {});
+
+  if (accounts[user] && accounts[user].password !== password) {
+    $('authError').textContent = 'Senha incorreta.';
+    return;
+  }
+
+  accounts[user] = {
+    name: accounts[user]?.name || user,
+    password
+  };
+
+  localStorage.setItem(
+    'macacomsg_demo_accounts',
+    JSON.stringify(accounts)
+  );
+
+  $('authError').textContent = '';
+  start(accounts[user].name, user);
+};
+
+$('googleBtn').onclick = () => {
+  toast('O login Google precisa ser configurado com um provedor real.');
+};
+
+$('logoutBtn').onclick = () => {
+  save();
+  me = null;
+  active = null;
+  $('app').classList.add('hidden');
+  $('auth').classList.remove('hidden');
+  $('loginPass').value = '';
+  $('loginUser').value = '';
+  $('search').value = '';
+};
+
+$('search').oninput = event => renderPeople(event.target.value);
+
+function findPerson() {
+  const handle = $('findUser').value.trim()
+    .replace(/^@/, '').toLowerCase();
+
+  if (!handle) {
+    toast('Digite o nome de usuário.');
+    return;
+  }
+
+  // Esta versão só encontra contatos já adicionados.
+  const person = people.find(p => p.handle.toLowerCase() === handle);
+
+  if (!person) {
+    toast('Usuário não encontrado. A busca global precisa de servidor.');
+    return;
+  }
+
+  openChat(person.handle);
+  $('findUser').value = '';
+}
+
+$('findBtn').onclick = findPerson;
+
+$('findUser').addEventListener('keydown', event => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    findPerson();
+  }
+});
+
+$('composer').onsubmit = event => {
+  event.preventDefault();
+  const text = $('messageInput').value.trim();
+
+  if (!text || !active) return;
+
+  (chats[active] ??= []).push({
+    from: me.handle,
+    text,
+    time: new Date().toLocaleTimeString('pt-BR', {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  });
+
+  $('messageInput').value = '';
+  save();
+  renderMessages();
+  renderPeople($('search').value);
+};
+
+$('backBtn').onclick = showEmpty;
+
+function call(kind) {
+  if (!active) return;
+
+  $('callNote').classList.remove('hidden');
+  $('callNote').textContent =
+    'Chamadas reais de ' + kind +
+    ' precisam de um serviço de comunicação conectado.';
+  toast('As chamadas ainda não estão conectadas.');
+}
+
+$('voiceBtn').onclick = () => call('voz');
+$('videoBtn').onclick = () => call('vídeo');
+
+function updateNotifyUI() {
+  const supported = 'Notification' in window;
+  const status = $('notifyStatus');
+  const button = $('notifyBtn');
+
+  if (!supported) {
+    status.textContent = 'Não suportado neste navegador';
+    button.disabled = true;
+    return;
+  }
+
+  const permission = Notification.permission;
+
+  status.textContent = permission === 'granted'
+    ? 'Ativadas neste navegador'
+    : permission === 'denied'
+      ? 'Bloqueadas nas configurações'
+      : 'Você ainda não escolheu';
+
+  button.textContent = permission === 'granted'
+    ? 'Ativadas ✓'
+    : permission === 'denied'
+      ? 'Como liberar?'
+      : 'Permitir';
+
+  button.disabled = permission === 'granted';
+}
+
+$('notifyBtn').onclick = async () => {
+  if (!('Notification' in window)) {
+    toast('Este navegador não oferece notificações.');
+    return;
+  }
+
+  if (Notification.permission === 'denied') {
+    toast('Libere as notificações nas configurações do navegador.');
+    return;
+  }
+
+  try {
+    const permission = await Notification.requestPermission();
+    updateNotifyUI();
+
+    if (permission === 'granted') {
+      new Notification('Macaco msg', {
+        body: 'Notificações ativadas neste navegador.'
+      });
+    } else {
+      toast('Você não permitiu notificações.');
+    }
+  } catch {
+    toast('Abra o site em HTTPS ou localhost para testar.');
+  }
+};
+
+updateNotifyUI();
+</script>
+</body>
+</html>
